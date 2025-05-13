@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selector de Papel para Impresión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+        }
+        .selector-container {
+            background-color: #f5f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .input-section {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        select, button {
+            padding: 12px;
+            width: 100%;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result-container {
+            display: none;
+            background-color: #e8f8f5;
+            border-left: 5px solid #2ecc71;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        .paper-type {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .paper-type h3 {
+            color: #e74c3c;
+            margin-top: 0;
+            border-bottom: 1px dotted #ccc;
+            padding-bottom: 5px;
+        }
+        .specs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .spec-item {
+            background-color: #eaf2f8;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .spec-title {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .best-for {
+            background-color: #e8f8f5;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .paper-list {
+            margin-top: 40px;
+        }
+        .alternatives {
+            margin-top: 15px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .recommendation-tag {
+            display: inline-block;
+            background-color: #27ae60;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-left: 10px;
+            font-size: 0.8em;
+        }
+        .usage-explanation {
+            background-color: #fff8e1;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 15px;
+            border-left: 3px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <h1>Selector de Papel para Impresión</h1>
+    
+    <div class="selector-container">
+        <div class="input-section">
+            <label for="usageSelect">¿Para qué necesitas el papel?</label>
+            <select id="usageSelect">
+                <option value="">-- Selecciona una opción --</option>
+                <option value="oficina">Documentos de oficina/uso diario</option>
+                <option value="fotos">Impresión de fotografías</option>
+                <option value="marketing">Material de marketing (folletos, catálogos)</option>
+                <option value="presentacion">Presentaciones profesionales/currículum</option>
+                <option value="invitaciones">Invitaciones/tarjetas</option>
+                <option value="diseno">Dibujo técnico/arquitectura</option>
+                <option value="artistico">Proyectos artísticos</option>
+                <option value="ecologico">Proyecto con enfoque ecológico</option>
+                <option value="diplomas">Certificados/diplomas</option>
+            </select>
+        </div>
+        
+        <div class="input-section">
+            <label for="qualitySelect">¿Qué nivel de calidad necesitas?</label>
+            <select id="qualitySelect">
+                <option value="">-- Selecciona una opción --</option>
+                <option value="basico">Básico (uso interno/borradores)</option>
+                <option value="estandar">Estándar (buena calidad para uso regular)</option>
+                <option value="alta">Alta calidad (presentaciones importantes)</option>
+                <option value="profesional">Calidad profesional (impresión comercial)</option>
+            </select>
+        </div>
+        
+        <button onclick="recommendPaper()">Recomendar Papel</button>
+        
+        <div id="resultContainer" class="result-container">
+            <h3>Papel recomendado:</h3>
+            <div id="recommendationResult"></div>
+            <div id="usageExplanation" class="usage-explanation"></div>
+            <div class="alternatives">
+                <p><strong>Alternativas:</strong> <span id="alternativesResult"></span></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="paper-list">
+        <h2>Glosario de Tipos de Papel</h2>
+        
+        <div class="paper-type" id="bond">
+            <h3>Papel Bond</h3>
+            <div class="specs">
+                <div class="spec-item">
+                    <span class="spec-title">Gramaje:</span> 70-90 g/m²
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Acabado:</span> Mate
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Opacidad:</span> Media
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Blancura:</span> 90-96%
+                </div>
+            </div>
+            <div class="best-for">
+                <span class="spec-title">Ideal para:</span> Documentos de oficina, fotocopias, impresiones diarias, borradores e impresiones internas.
+            </div>
+        </div>
+        
+        <div class="paper-type" id="multifuncion">
+            <h3>Papel Multifunción</h3>
+            <div class="specs">
+                <div class="spec-item">
+                    <span class="spec-title">Gramaje:</span> 80-100 g/m²
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Acabado:</span> Mate
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Opacidad:</span> Media-Alta
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Blancura:</span> 95-98%
+                </div>
+            </div>
+            <div class="best-for">
+                <span class="spec-title">Ideal para:</span> Compatible tanto con impresoras láser como de inyección de tinta. Documentos empresariales, correspondencia y uso diario.
+            </div>
+        </div>
+        
+        <div class="paper-type" id="fotografico_brillante">
+            <h3>Papel Fotográfico Brillante</h3>
+            <div class="specs">
+                <div class="spec-item">
+                    <span class="spec-title">Gramaje:</span> 180-260 g/m²
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Acabado:</span> Brillante
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Opacidad:</span> Alta
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Secado:</span> Rápido
+                </div>
+            </div>
+            <div class="best-for">
+                <span class="spec-title">Ideal para:</span> Fotografías con colores vibrantes y contrastes fuertes. Gran definición y brillo, ideal para retratos y paisajes.
+            </div>
+        </div>
+        
+        <div class="paper-type" id="fotografico_satinado">
+            <h3>Papel Fotográfico Satinado</h3>
+            <div class="specs">
+                <div class="spec-item">
+                    <span class="spec-title">Gramaje:</span> 180-240 g/m²
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Acabado:</span> Semi-brillante
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Opacidad:</span> Alta
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Huellas:</span> Menos visibles que en brillante
+                </div>
+            </div>
+            <div class="best-for">
+                <span class="spec-title">Ideal para:</span> Fotografías profesionales, menos reflejos que el papel brillante. Mejor para exposición bajo luz.
+            </div>
+        </div>
+        
+        <div class="paper-type" id="fotografico_mate">
+            <h3>Papel Fotográfico Mate</h3>
+            <div class="specs">
+                <div class="spec-item">
+                    <span class="spec-title">Gramaje:</span> 170-200 g/m²
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Acabado:</span> Mate
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Opacidad:</span> Alta
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Huellas:</span> No visibles
+                </div>
+            </div>
+            <div class="best-for">
+                <span class="spec-title">Ideal para:</span> Fotografías artísticas, blanco y negro, o imágenes que necesitan evitar reflejos. Perfecto para portafolios y exposiciones.
+            </div>
+        </div>
+        
+        <div class="paper-type" id="couche">
+            <h3>Papel Couché</h3>
+            <div class="specs">
+                <div class="spec-item">
+                    <span class="spec-title">Gramaje:</span> 90-350 g/m²
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Acabado:</span> Brillante, Mate o Satinado
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Opacidad:</span> Alta
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Recubrimiento:</span> Con capa mineral
+                </div>
+            </div>
+            <div class="best-for">
+                <span class="spec-title">Ideal para:</span> Catálogos, folletos, revistas y publicaciones con imágenes de alta calidad. Excelente reproducción de colores.
+            </div>
+        </div>
+        
+        <div class="paper-type" id="cartulina">
+            <h3>Cartulina</h3>
+            <div class="specs">
+                <div class="spec-item">
+                    <span class="spec-title">Gramaje:</span> 180-300 g/m²
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Acabado:</span> Variado (Mate, Brillo, Texturizado)
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Rigidez:</span> Alta
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Durabilidad:</span> Alta
+                </div>
+            </div>
+            <div class="best-for">
+                <span class="spec-title">Ideal para:</span> Tarjetas de presentación, invitaciones, portadas, carpetas y material que requiere resistencia.
+            </div>
+        </div>
+        
+        <div class="paper-type" id="vegetal">
+            <h3>Papel Vegetal o Calco</h3>
+            <div class="specs">
+                <div class="spec-item">
+                    <span class="spec-title">Gramaje:</span> 60-110 g/m²
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Acabado:</span> Translúcido
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Opacidad:</span> Baja
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Característica:</span> Semitransparente
+                </div>
+            </div>
+            <div class="best-for">
+                <span class="spec-title">Ideal para:</span> Bocetos técnicos, dibujos arquitectónicos, diseños superpuestos, invitaciones elegantes y proyectos artísticos.
+            </div>
+        </div>
+        
+        <div class="paper-type" id="reciclado">
+            <h3>Papel Reciclado</h3>
+            <div class="specs">
+                <div class="spec-item">
+                    <span class="spec-title">Gramaje:</span> 70-100 g/m²
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Acabado:</span> Mate, ligeramente texturizado
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Blancura:</span> 80-90%
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Sostenibilidad:</span> Alta
+                </div>
+            </div>
+            <div class="best-for">
+                <span class="spec-title">Ideal para:</span> Documentos de oficina, correspondencia y publicaciones ecológicas. Menor impacto ambiental.
+            </div>
+        </div>
+        
+        <div class="paper-type" id="premium">
+            <h3>Papel Premium (Alto Gramaje)</h3>
+            <div class="specs">
+                <div class="spec-item">
+                    <span class="spec-title">Gramaje:</span> 100-120 g/m²
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Acabado:</span> Mate o Satinado
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Blancura:</span> 98-100%
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Opacidad:</span> Muy alta
+                </div>
+            </div>
+            <div class="best-for">
+                <span class="spec-title">Ideal para:</span> Presentaciones profesionales, currículums, propuestas de negocios y documentos oficiales de alta calidad.
+            </div>
+        </div>
+        
+        <div class="paper-type" id="texturizado">
+            <h3>Papel Texturizado</h3>
+            <div class="specs">
+                <div class="spec-item">
+                    <span class="spec-title">Gramaje:</span> 90-120 g/m²
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Acabado:</span> Marcado de agua, lino, verjurado
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Apariencia:</span> Elegante
+                </div>
+                <div class="spec-item">
+                    <span class="spec-title">Tacto:</span> Agradable, distintivo
+                </div>
+            </div>
+            <div class="best-for">
+                <span class="spec-title">Ideal para:</span> Certificados, diplomas, invitaciones formales, cartas personalizadas y documentos corporativos.
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function recommendPaper() {
+            const usage = document.getElementById('usageSelect').value;
+            const quality = document.getElementById('qualitySelect').value;
+            
+            if (!usage || !quality) {
+                alert("Por favor, selecciona ambas opciones para obtener una recomendación.");
+                return;
+            }
+            
+            let recommendation = "";
+            let alternatives = "";
+            let explanation = "";
+            
+            // Matriz de recomendaciones basada en uso y calidad
+            if (usage === "oficina") {
+                if (quality === "basico") {
+                    recommendation = "Papel Bond (70-80 g/m²)";
+                    alternatives = "Papel Reciclado, Papel Multifunción económico";
+                    explanation = "El papel Bond básico es ideal para impresión interna y borradores, ofrece buena relación calidad-precio y es compatible con cualquier impresora.";
+                } else if (quality === "estandar") {
+                    recommendation = "Papel Multifunción (80 g/m²)";
+                    alternatives = "Papel Bond de alta blancura, Papel Premium ligero";
+                    explanation = "El papel Multifunción de 80 g/m² es el estándar para oficinas, ofrece buena opacidad y blancura para documentos de uso diario.";
+                } else if (quality === "alta") {
+                    recommendation = "Papel Premium (100 g/m²)";
+                    alternatives = "Papel Multifunción de alta calidad, Papel para presentaciones";
+                    explanation = "El papel Premium de mayor gramaje proporciona una sensación de calidad superior, mayor opacidad y mejor impresión a doble cara.";
+                } else {
+                    recommendation = "Papel Premium (120 g/m²)";
+                    alternatives = "Papel Couché Mate, Papel texturizado de alta blancura";
+                    explanation = "Para documentos de oficina de máxima calidad, este papel ofrece excelente sensación al tacto, rigidez y una impresión notablemente profesional.";
+                }
+            } else if (usage === "fotos") {
+                if (quality === "basico") {
+                    recommendation = "Papel Fotográfico Brillante Económico (180 g/m²)";
+                    alternatives = "Papel Couché Brillante, Papel Fotográfico Mate económico";
+                    explanation = "Para impresiones fotográficas básicas que no requieren archivado a largo plazo, pero mantienen buena reproducción de color.";
+                } else if (quality === "estandar") {
+                    recommendation = "Papel Fotográfico Brillante (220-230 g/m²)";
+                    alternatives = "Papel Fotográfico Satinado, Papel Couché de alta calidad";
+                    explanation = "Ideal para fotos con colores vibrantes y acabado brillante, adecuado para la mayoría de impresiones fotográficas de uso general.";
+                } else if (quality === "alta") {
+                    recommendation = "Papel Fotográfico Satinado (240 g/m²)";
+                    alternatives = "Papel Fotográfico Brillante de alta calidad, Papel Fotográfico Microporoso";
+                    explanation = "El acabado satinado ofrece una excelente reproducción del color con menos reflejos que el brillante, ideal para exposición bajo luz.";
+                } else {
+                    recommendation = "Papel Fotográfico Premium (250-300 g/m²)";
+                    alternatives = "Papel Fotográfico con base de algodón, Papel Fotográfico Artístico";
+                    explanation = "Para fotografías profesionales, este papel ofrece máxima durabilidad, profundidad de color y resistencia a la decoloración.";
+                }
+            } else if (usage === "marketing") {
+                if (quality === "basico") {
+                    recommendation = "Papel Couché Mate (90-115 g/m²)";
+                    alternatives = "Papel Multifunción de alta calidad, Papel Satinado económico";
+                    explanation = "Para folletos y materiales de marketing básicos, ofrece buena reproducción de color a un precio accesible.";
+                } else if (quality === "estandar") {
+                    recommendation = "Papel Couché Brillante (135-150 g/m²)";
+                    alternatives = "Papel Couché Mate de mayor gramaje, Papel Satinado";
+                    explanation = "Excelente opción para catálogos y folletos con fotografías, proporciona colores vivos y buena durabilidad.";
+                } else if (quality === "alta") {
+                    recommendation = "Papel Couché Brillo/Mate (170-200 g/m²)";
+                    alternatives = "Papel Estucado, Papel Arte";
+                    explanation = "Para materiales de marketing de alta calidad como catálogos premium y folletos de empresa, ofrece excelente reproducción de imágenes.";
+                } else {
+                    recommendation = "Papel Couché Premium (250-350 g/m²)";
+                    alternatives = "Papel Estucado de alto gramaje, Cartulina Couché";
+                    explanation = "Para materiales de marketing profesionales, ofrece un tacto lujoso, excelente rigidez y reproducción de color excepcional.";
+                }
+            } else if (usage === "presentacion") {
+                if (quality === "basico") {
+                    recommendation = "Papel Multifunción (90-100 g/m²)";
+                    alternatives = "Papel Bond de alta calidad, Papel Reciclado Premium";
+                    explanation = "Para presentaciones y currículums básicos, este papel ofrece buena opacidad y blancura a un precio accesible.";
+                } else if (quality === "estandar") {
+                    recommendation = "Papel Premium (100-110 g/m²)";
+                    alternatives = "Papel Satinado, Papel Multifunción de alta gama";
+                    explanation = "Ideal para currículums y presentaciones profesionales, con excelente blancura y sensación de calidad.";
+                } else if (quality === "alta") {
+                    recommendation = "Papel Premium Texturizado (100-120 g/m²)";
+                    alternatives = "Papel Premium de alto gramaje, Papel Verjurado";
+                    explanation = "Para presentaciones importantes, este papel con textura sutil transmite profesionalidad y distinción.";
+                } else {
+                    recommendation = "Papel Premium con Acabado Especial (120+ g/m²)";
+                    alternatives = "Papel Texturizado de lujo, Papel Pergamino";
+                    explanation = "Para las presentaciones más importantes, este papel destaca por su tacto excepcional, rigidez y acabado distintivo.";
+                }
+            } else if (usage === "invitaciones") {
+                if (quality === "basico") {
+                    recommendation = "Cartulina Ligera (180-200 g/m²)";
+                    alternatives = "Papel Premium grueso, Papel Texturizado económico";
+                    explanation = "Para invitaciones sencillas, ofrece buena rigidez y permite impresión en ambas caras.";
+                } else if (quality === "estandar") {
+                    recommendation = "Cartulina (220-250 g/m²)";
+                    alternatives = "Papel Texturizado, Papel Metalizado";
+                    explanation = "Ideal para invitaciones y tarjetas, con buena rigidez y resistencia al manejo.";
+                } else if (quality === "alta") {
+                    recommendation = "Papel Texturizado (250-300 g/m²)";
+                    alternatives = "Cartulina de alta calidad, Papel Algodonado";
+                    explanation = "Para invitaciones elegantes, este papel con textura marcada aporta sofisticación y tacto agradable.";
+                } else {
+                    recommendation = "Cartulina Especial o Nacarada (300+ g/m²)";
+                    alternatives = "Papel Vegetal combinado con cartulina, Papel Metalizado Premium";
+                    explanation = "Para invitaciones de máxima calidad como bodas o eventos especiales, estos papeles ofrecen acabados únicos y lujosos.";
+                }
+            } else if (usage === "diseno") {
+                if (quality === "basico") {
+                    recommendation = "Papel Vegetal Básico (60-80 g/m²)";
+                    alternatives = "Papel para bocetos, Papel Bond transparente";
+                    explanation = "Para bocetos y dibujos técnicos básicos que requieren transparencia para calcar o superponer.";
+                } else if (quality === "estandar") {
+                    recommendation = "Papel Vegetal (90-100 g/m²)";
+                    alternatives = "Papel para planos estándar, Papel Poliéster económico";
+                    explanation = "Estándar para dibujo técnico y arquitectónico, ofrece buena transparencia y resistencia.";
+                } else if (quality === "alta") {
+                    recommendation = "Papel Vegetal Profesional (110-120 g/m²)";
+                    alternatives = "Papel para planos de alta calidad, Papel Poliéster";
+                    explanation = "Para dibujos técnicos profesionales, mayor resistencia y durabilidad manteniendo buena transparencia.";
+                } else {
+                    recommendation = "Papel Poliéster o Mylar";
+                    alternatives = "Papel Vegetal Premium, Papel para planos archivables";
+                    explanation = "Para planos y dibujos profesionales que requieren máxima durabilidad, resistencia a la humedad y estabilidad dimensional.";
+                }
+            } else if (usage === "artistico") {
+                if (quality === "basico") {
+                    recommendation = "Papel para Bocetos (90-120 g/m²)";
+                    alternatives = "Papel Multifunción texturizado, Papel Reciclado artístico";
+                    explanation = "Para bocetos y prácticas artísticas, ofrece buena superficie para lápiz y otros medios secos.";
+                } else if (quality === "estandar") {
+                    recommendation = "Papel para Arte (150-200 g/m²)";
+                    alternatives = "Papel Acuarela ligero, Papel Mixto para técnicas variadas";
+                    explanation = "Versátil para diferentes técnicas artísticas, con buena textura y resistencia a correcciones.";
+                } else if (quality === "alta") {
+                    recommendation = "Papel Específico según Técnica (200-300 g/m²)";
+                    alternatives = "Papel Acuarela, Papel para Acrílicos, Papel Pastel";
+                    explanation = "Papeles profesionales diseñados para técnicas específicas, con texturas y absorciones optimizadas.";
+                } else {
+                    recommendation = "Papel Artístico Premium (300+ g/m²)";
+                    alternatives = "Papel de Algodón 100%, Papeles hechos a mano";
+                    explanation = "Para obras de arte profesionales, estos papeles ofrecen máxima calidad, archivabilidad y rendimiento superior con cualquier técnica.";
+                }
+            } else if (usage === "ecologico") {
+                if (quality === "basico") {
+                    recommendation = "Papel Reciclado Básico (70-80 g/m²)";
+                    alternatives = "Papel sin blanquear, Papel de fibras alternativas económico";
+                    explanation = "Opción ecológica básica para uso diario, fabricado con fibras recicladas postconsumo.";
+                } else if (quality === "estandar") {
+                    recommendation = "Papel Reciclado Alta Blancura (80-90 g/m²)";
+                    alternatives = "Papel certificado FSC, Papel de bajas emisiones";
+                    explanation = "Papel reciclado de mayor calidad con buen balance entre aspecto profesional e impacto ambiental reducido.";
+                } else if (quality === "alta") {
+                    recommendation = "Papel Ecológico Premium (90-100 g/m²)";
+                    alternatives = "Papel de fibras alternativas (bambú, caña), Papel FSC Premium";
+                    explanation = "Para documentos de alta calidad con compromiso ambiental, fabricado con procesos sostenibles y materiales renovables.";
+                } else {
+                    recommendation = "Papel Artesanal Ecológico";
+                    alternatives = "Papel de fibras no madereras Premium, Papel neutro en carbono";
+                    explanation = "Papeles especiales de máxima sostenibilidad fabricados con fibras alternativas, procesos de bajo impacto y a menudo producción local.";
+                }
+            } else if (usage === "diplomas") {
+                if (quality === "basico") {
+                    recommendation = "Papel Texturizado (120-160 g/m²)";
+                    alternatives = "Cartulina ligera, Papel Premium";
+                    explanation = "Para certificados y diplomas sencillos, ofrece aspecto formal a un precio accesible.";
+                } else if (quality === "estandar") {
+                    recommendation = "Papel Verjurado (160-200 g/m²)";
+                    alternatives = "Papel Pergamino, Papel Premium texturizado";
+                    explanation = "
